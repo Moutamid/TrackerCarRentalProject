@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "885631530253",
+    "firebase_url": "https://car-rental-project-8827c-default-rtdb.firebaseio.com",
+    "project_id": "car-rental-project-8827c",
+    "storage_bucket": "car-rental-project-8827c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885631530253:android:3292b3475a0479943dec44",
+        "android_client_info": {
+          "package_name": "com.moutamid.admincarrentalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885631530253-7v0tohfude0skrsbeef9liumekn1p387.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCysDmWf6So4T9fDGh6-AQ31pGrnkOhlPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885631530253-7v0tohfude0skrsbeef9liumekn1p387.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885631530253:android:86ec38402877321b3dec44",
+        "android_client_info": {
+          "package_name": "com.moutamid.carrentalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885631530253-7v0tohfude0skrsbeef9liumekn1p387.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCysDmWf6So4T9fDGh6-AQ31pGrnkOhlPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885631530253-7v0tohfude0skrsbeef9liumekn1p387.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885631530253:android:11f2c882efdf823c3dec44",
+        "android_client_info": {
+          "package_name": "com.moutamid.trackercarrentalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885631530253-7v0tohfude0skrsbeef9liumekn1p387.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCysDmWf6So4T9fDGh6-AQ31pGrnkOhlPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885631530253-7v0tohfude0skrsbeef9liumekn1p387.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
