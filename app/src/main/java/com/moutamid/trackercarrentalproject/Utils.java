@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AlertDialog;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Random;
 
@@ -322,6 +323,22 @@ public class Utils {
 
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            return sdf.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "Error";
+
+    }
+
+    public String getTime() {
+
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             return sdf.format(date);
 
         } catch (Exception e) {

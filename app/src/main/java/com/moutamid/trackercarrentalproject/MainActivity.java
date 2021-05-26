@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -54,6 +55,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -113,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
         parentLayout = findViewById(R.id.parent_layout_car_tracker);
         progressBar = findViewById(R.id.progress_bar_car_tracker);
         errorView = findViewById(R.id.error_layout_fragment_tracker);
+
+        findViewById(R.id.history_btn_main).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TrackingHistoryActivity.class));
+            }
+        });
 
 //        double value = 0;
 //
@@ -181,13 +190,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     if (!MainActivity.this.isDestroyed())
-                    Glide.with(MainActivity.this)
-                            .load(model.carImageUrl)
-                            .apply(new RequestOptions()
-                                    .placeholder(R.color.grey)
-                                    .error(R.color.grey)
-                            )
-                            .into(carImageView);
+                        Glide.with(MainActivity.this)
+                                .load(model.carImageUrl)
+                                .apply(new RequestOptions()
+                                        .placeholder(R.color.grey)
+                                        .error(R.color.grey)
+                                )
+                                .into(carImageView);
                 }
 
                 carNameTextView.setText(model.getCarName());
@@ -494,6 +503,17 @@ public class MainActivity extends AppCompatActivity {
                     .child(mAuth.getCurrentUser().getUid())
                     .child("currentMileages")
                     .setValue(finalDistancec);
+
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("time", new Utils().getTime());
+            hashMap.put("lat", String.valueOf(currentLocation.getLatitude()));
+            hashMap.put("long", String.valueOf(currentLocation.getLongitude()));
+
+            databaseReference.child("requests")
+                    .child(mAuth.getCurrentUser().getUid())
+                    .child("tracking_history")
+                    .push()
+                    .setValue(hashMap);
 
             if (finalDistancec > totalMileagesDouble) {
                 showLimitReachedDialog();
