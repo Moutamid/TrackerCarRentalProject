@@ -20,41 +20,49 @@ public class ApplicationContext extends Application {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        databaseReference.child("requests")
-                .child(auth.getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (!snapshot.exists())
-                            return;
+        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
 
-                        if (!snapshot.child("pushKey").exists())
-                            return;
+                    databaseReference.child("requests")
+                            .child(auth.getCurrentUser().getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (!snapshot.exists())
+                                        return;
 
-                        String keyStr = snapshot.child("pushKey").getValue(String.class);
+                                    if (!snapshot.child("pushKey").exists())
+                                        return;
 
-                        if (snapshot.child("status").exists()) {
-                            String statusStr = snapshot.child("status").getValue(String.class);
+                                    String keyStr = snapshot.child("pushKey").getValue(String.class);
 
-                            databaseReference.child("booking_history").child(keyStr)
-                                    .child("status").setValue(statusStr);
-                        }
+                                    if (snapshot.child("status").exists()) {
+                                        String statusStr = snapshot.child("status").getValue(String.class);
 
-                        if (snapshot.child("currentMileages").exists()) {
-                            Boolean currentMileagesStr = snapshot.child("currentMileages").getValue(Boolean.class);
+                                        databaseReference.child("booking_history").child(keyStr)
+                                                .child("status").setValue(statusStr);
+                                    }
 
-                            databaseReference.child("booking_history").child(keyStr)
-                                    .child("currentMileages")
-                                    .setValue(currentMileagesStr);
-                        }
+                                    if (snapshot.child("currentMileages").exists()) {
+                                        double currentMileagesStr = snapshot.child("currentMileages").getValue(Double.class);
 
-                    }
+                                        databaseReference.child("booking_history").child(keyStr)
+                                                .child("currentMileages")
+                                                .setValue(currentMileagesStr);
+                                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                                }
 
-                    }
-                });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
+                                }
+                            });
+
+                }
+            }
+        });
     }
 }
