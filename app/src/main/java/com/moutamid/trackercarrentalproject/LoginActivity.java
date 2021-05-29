@@ -58,95 +58,142 @@ public class LoginActivity extends AppCompatActivity {
         // Initializing Views
         initViews();
 
-        // CODE HERE
-        Dexter.withActivity(LoginActivity.this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-//                        Toast.makeText(LoginActivity.this, "Permission granted successfully!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        if (response.isPermanentlyDenied()) {
-                            // open device settings when the permission is
-                            // denied permanently
-                            Toast.makeText(LoginActivity.this, "You need to provide permission!", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent();
-                            intent.setAction(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package",
-                                    BuildConfig.APPLICATION_ID, null);
-                            intent.setData(uri);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
-
-        Dexter.withActivity(LoginActivity.this)
-                .withPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-//                        Toast.makeText(LoginActivity.this, "Permission granted successfully!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        if (response.isPermanentlyDenied()) {
-                            // open device settings when the permission is
-                            // denied permanently
-                            Toast.makeText(LoginActivity.this, "You need to provide permission!", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent();
-                            intent.setAction(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package",
-                                    BuildConfig.APPLICATION_ID, null);
-                            intent.setData(uri);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
-
     }
 
     private View.OnClickListener loginBtnListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String emailStr = emailEditText.getText().toString();
-                String passwordStr = passwordEditText.getText().toString();
 
-                if (!TextUtils.isEmpty(emailStr) && !TextUtils.isEmpty(passwordStr)) {
+                Dexter.withContext(LoginActivity.this)
+                        .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        .withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse response) {
+//                        Toast.makeText(LoginActivity.this, "Permission granted successfully!", Toast.LENGTH_SHORT).show();
 
-                    signInUserWithNameAndPassword(emailStr, passwordStr);
+                                Dexter.withContext(LoginActivity.this)
+                                        .withPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                                        .withListener(new PermissionListener() {
+                                            @Override
+                                            public void onPermissionGranted(PermissionGrantedResponse response) {
+//                        Toast.makeText(LoginActivity.this, "Permission granted successfully!", Toast.LENGTH_SHORT).show();
 
-                } else if (TextUtils.isEmpty(emailStr)) {
+                                                String emailStr = emailEditText.getText().toString();
+                                                String passwordStr = passwordEditText.getText().toString();
 
-                    emailEditText.setError("Please enter emailStr");
-                    emailEditText.requestFocus();
+                                                if (!TextUtils.isEmpty(emailStr) && !TextUtils.isEmpty(passwordStr)) {
+                                                    mProgressDialog.show();
 
-                } else if (TextUtils.isEmpty(passwordStr)) {
+                                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                                                    databaseReference.child("cars").child(emailStr).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    passwordEditText.setError("Please enter password");
-                    passwordEditText.requestFocus();
+                                                            if (snapshot.exists()) {
 
-                }
+                                                                mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                                                        if (task.isSuccessful()) {
+                                                                            mProgressDialog.dismiss();
+                                                                            new Utils().storeString(LoginActivity.this, "currentKey", emailStr);
+
+                                                                            finish();
+                                                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                            startActivity(intent);
+
+                                                                            Toast.makeText(LoginActivity.this, "You are logged in!", Toast.LENGTH_SHORT).show();
+
+                                                                        } else {
+                                                                            mProgressDialog.dismiss();
+                                                                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                                        }
+
+                                                                    }
+                                                                });
+
+                                                            } else {
+                                                                mProgressDialog.dismiss();
+                                                                Toast.makeText(LoginActivity.this, "Car key is invalid!", Toast.LENGTH_SHORT).show();
+                                                            }
+
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                            mProgressDialog.dismiss();
+                                                            Toast.makeText(LoginActivity.this, error.toException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+
+//                    signInUserWithNameAndPassword(emailStr, passwordStr);
+
+                                                } else if (TextUtils.isEmpty(emailStr)) {
+
+                                                    emailEditText.setError("Please enter emailStr");
+                                                    emailEditText.requestFocus();
+
+                                                } else if (TextUtils.isEmpty(passwordStr)) {
+
+                                                    passwordEditText.setError("Please enter password");
+                                                    passwordEditText.requestFocus();
+
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                                if (response.isPermanentlyDenied()) {
+                                                    // open device settings when the permission is
+                                                    // denied permanently
+                                                    Toast.makeText(LoginActivity.this, "You need to provide permission!", Toast.LENGTH_SHORT).show();
+
+                                                    Intent intent = new Intent();
+                                                    intent.setAction(
+                                                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                                    Uri uri = Uri.fromParts("package",
+                                                            BuildConfig.APPLICATION_ID, null);
+                                                    intent.setData(uri);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                                token.continuePermissionRequest();
+                                            }
+                                        }).check();
+
+                            }
+
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                if (response.isPermanentlyDenied()) {
+                                    // open device settings when the permission is
+                                    // denied permanently
+                                    Toast.makeText(LoginActivity.this, "You need to provide permission!", Toast.LENGTH_SHORT).show();
+
+                                    Intent intent = new Intent();
+                                    intent.setAction(
+                                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package",
+                                            BuildConfig.APPLICATION_ID, null);
+                                    intent.setData(uri);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        }).check();
             }
         };
     }

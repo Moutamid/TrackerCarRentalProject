@@ -51,8 +51,14 @@ public class TrackingHistoryActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        databaseReference.child("requests")
-                .child(mAuth.getCurrentUser().getUid())
+        String currentCarKey = new Utils().getStoredString(TrackingHistoryActivity.this, "currentKey");
+
+        databaseReference
+                .child("cars")
+                .child(currentCarKey)
+//                .child("booking")
+//                .child("requests")
+//                .child(mAuth.getCurrentUser().getUid())
                 .child("tracking_history").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    private String currentCarKey;
+
     private int LOCATION_REQUEST_CODE = 10001;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView carNameTextView, myCarNameTextView, currentMileagesTextView,
             totalMileagesTextView;
 
-    private FirebaseAuth mAuth;
+    //    private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
 
 
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
+//        mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.keepSynced(true);
 
@@ -130,13 +132,25 @@ public class MainActivity extends AppCompatActivity {
 //                .child("currentMileages")
 //                .setValue(value);
 
-        databaseReference.child("requests")
-                .child(mAuth.getCurrentUser().getUid())
+        // TODO: LOGIN WITH CAR KEY NOT WITH USER NAME AND PASSWORD
+        currentCarKey = new Utils().getStoredString(MainActivity.this, "currentKey");
+
+        databaseReference
+                .child("cars")
+                .child(currentCarKey)
+                .child("booking")
                 .addListenerForSingleValueEvent(
                         bookingRequestObjectListener()
                 );
+
+//        databaseReference.child("requests")
+//                .child(mAuth.getCurrentUser().getUid())
+//                .addListenerForSingleValueEvent(
+//                        bookingRequestObjectListener()
+//                );
     }
 
+    private RequestBookingModel model;
 
     private ValueEventListener bookingRequestObjectListener() {
         return new ValueEventListener() {
@@ -151,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                RequestBookingModel model = snapshot.getValue(RequestBookingModel.class);
+                model = snapshot.getValue(RequestBookingModel.class);
 
 //                carKey = model.getCarKey();
 
@@ -344,8 +358,12 @@ public class MainActivity extends AppCompatActivity {
         final TextView startDriveTextView = (TextView) findViewById(R.id.start_driving_textview);
         final ImageView gpsImageView = findViewById(R.id.tracker_image_gps);
 
-        databaseReference.child("requests")
-                .child(mAuth.getCurrentUser().getUid())
+        databaseReference
+                .child("cars")
+                .child(currentCarKey)
+                .child("booking")
+//                .child("requests")
+//                .child(mAuth.getCurrentUser().getUid())
                 .child("tracker_started")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -370,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
 
                             getLastLocation();
                             firstTime = false;
-//                    startLocationChecker();
+                            startLocationChecker();
 
 //                            golden = false;
                         } else {
@@ -466,6 +484,9 @@ public class MainActivity extends AppCompatActivity {
 
             Location currentLocation = locationResult.getLastLocation();
 
+            if (currentLocation == null)
+                return;
+
             Log.d(TAG, "onLocationResult: currentLocation " + currentLocation.getLatitude());
             Log.d(TAG, "onLocationResult: currentLocation " + currentLocation.getLongitude());
             //locationB.setLatitude(31.485486);
@@ -499,8 +520,17 @@ public class MainActivity extends AppCompatActivity {
 
             finalDistancec = Double.parseDouble(df.format(finalDistancee));
 
-            databaseReference.child("requests")
-                    .child(mAuth.getCurrentUser().getUid())
+            databaseReference
+                    .child("cars")
+                    .child(currentCarKey)
+                    .child("booking")
+//                    .child("requests")
+//                    .child(mAuth.getCurrentUser().getUid())
+                    .child("currentMileages")
+                    .setValue(finalDistancec);
+            databaseReference
+                    .child("requests")
+                    .child(model.getMyUid())
                     .child("currentMileages")
                     .setValue(finalDistancec);
 
@@ -509,8 +539,12 @@ public class MainActivity extends AppCompatActivity {
             hashMap.put("lat", String.valueOf(currentLocation.getLatitude()));
             hashMap.put("long", String.valueOf(currentLocation.getLongitude()));
 
-            databaseReference.child("requests")
-                    .child(mAuth.getCurrentUser().getUid())
+            databaseReference
+                    .child("cars")
+                    .child(currentCarKey)
+//                    .child("booking")
+//                    .child("requests")
+//                    .child(mAuth.getCurrentUser().getUid())
                     .child("tracking_history")
                     .push()
                     .setValue(hashMap);
