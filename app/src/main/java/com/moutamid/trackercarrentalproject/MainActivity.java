@@ -548,10 +548,10 @@ public class MainActivity extends AppCompatActivity {
                     .push()
                     .setValue(hashMap);
 
-            if (finalDistancec > totalMileagesDouble) {
-                showLimitReachedDialog();
-
-            }
+//            if (finalDistancec > totalMileagesDouble) {
+//                showLimitReachedDialog();/
+//
+//            }
 
 //            currentMileagesTextView.setText(df.format(distanceInMiles));
             Log.d(TAG, "onLocationResult: textview " + currentMileagesTextView.getText().toString());
@@ -562,7 +562,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void showLimitReachedDialog() {
+    private void showLimitReachedDialog1() {
 
         showOfflineDialog(MainActivity.this, "You've reached your mileage!",
                 "You can't drive more than what you've paid for! If you still drive then you'll be charged a fine of RM10 on every mileage."
