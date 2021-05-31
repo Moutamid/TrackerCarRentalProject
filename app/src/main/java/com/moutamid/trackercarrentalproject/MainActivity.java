@@ -132,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
 //                .child("currentMileages")
 //                .setValue(value);
 
-        // TODO: LOGIN WITH CAR KEY NOT WITH USER NAME AND PASSWORD
         currentCarKey = new Utils().getStoredString(MainActivity.this, "currentKey");
 
         databaseReference
@@ -233,9 +232,9 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-                if (currentMileagesDouble > totalMileagesDouble) {
-                    showLimitReachedDialog();
-                }
+//                if (currentMileagesDouble > totalMileagesDouble) {
+//                    showLimitReachedDialog();
+//                }
 
                 setStartDriveBtnCLickListener();
 //                    requestStatusTv.setText(model.getStatus());
