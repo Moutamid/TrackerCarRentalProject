@@ -73,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
     private double finalDistancec = 0;
 
-//    private View view;
-
-//    private Context context = MainActivity.this;
-
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -95,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView carNameTextView, myCarNameTextView, currentMileagesTextView,
             totalMileagesTextView;
 
-    //    private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
 
 
@@ -104,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.keepSynced(true);
 
@@ -125,15 +119,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        double value = 0;
-//
-//        databaseReference.child("requests")
-//                .child(mAuth.getCurrentUser().getUid())
-//                .child("currentMileages")
-//                .setValue(value);
-
-        currentCarKey = new Utils().getStoredString(MainActivity.this, "currentKey");
-
         databaseReference
                 .child("cars")
                 .child(currentCarKey)
@@ -142,11 +127,6 @@ public class MainActivity extends AppCompatActivity {
                         bookingRequestObjectListener()
                 );
 
-//        databaseReference.child("requests")
-//                .child(mAuth.getCurrentUser().getUid())
-//                .addListenerForSingleValueEvent(
-//                        bookingRequestObjectListener()
-//                );
     }
 
     private RequestBookingModel model;
@@ -165,25 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 model = snapshot.getValue(RequestBookingModel.class);
-
-//                carKey = model.getCarKey();
-
-//                totalMileagesTv.setText(model.getTotalMileages() + " Mileages");
-//                totalCostTv.setText("$" + model.getTotalCost());
-//
-//                if (MainActivity.this != null) {
-//                    if (model.getStatus().equals("pending"))
-//                        requestStatusTv.setTextColor(MainActivity.this.getResources()
-//                                .getColor(R.color.greyTextColor));
-//
-//                    if (model.getStatus().equals("accepted"))
-//                        requestStatusTv.setTextColor(MainActivity.this.getResources()
-//                                .getColor(R.color.green));
-//
-//                    if (model.getStatus().equals("rejected"))
-//                        requestStatusTv.setTextColor(MainActivity.this.getResources()
-//                                .getColor(R.color.red));
-//                }
 
                 if (model.getStatus().equals("pending")) {
                     progressBar.setVisibility(View.GONE);
@@ -232,17 +193,8 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
-//                if (currentMileagesDouble > totalMileagesDouble) {
-//                    showLimitReachedDialog();
-//                }
 
                 setStartDriveBtnCLickListener();
-//                    requestStatusTv.setText(model.getStatus());
-
-//                databaseReference.child("cars").child(carKey)
-//                        .addListenerForSingleValueEvent(
-//                                carModelListener()
-//                        );
 
             }
 
@@ -361,8 +313,6 @@ public class MainActivity extends AppCompatActivity {
                 .child("cars")
                 .child(currentCarKey)
                 .child("booking")
-//                .child("requests")
-//                .child(mAuth.getCurrentUser().getUid())
                 .child("tracker_started")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -400,11 +350,9 @@ public class MainActivity extends AppCompatActivity {
                             startDriveTextView.setText("Tracking is stopped");
 
                             gpsAnimation.stop();
-//                    gpsImageView.clearAnimation();
 
                             stopLocationUpdates();
 
-//                            golden = true;
 
                         }
 
@@ -422,31 +370,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //if (golden) {
-                //
-                //                    startDriveLayout.setBackgroundResource(R.drawable.bg_stop_tracker_btn);
-                //                    startDriveTextView.setText("Stop");
-                //
-                //                    gpsAnimation = YoYo.with(Techniques.Flash).duration(4000).delay(1000).repeat(10000)
-                //                            .playOn(gpsImageView);
-                //
-                //                    getLastLocation();
-                ////                    startLocationChecker();
-                //
-                //                    golden = false;
-                //                } else {
-                //
-                //                    startDriveLayout.setBackgroundResource(R.drawable.bg_get_started_btn);
-                //                    startDriveTextView.setText("Start driving");
-                //
-                //                    gpsAnimation.stop();
-                ////                    gpsImageView.clearAnimation();
-                //
-                //                    stopLocationUpdates();
-                //
-                //                    golden = true;
-                //
-                //                }
+
 
             }
         });
@@ -461,26 +385,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-//            startLocation = new Location("start location");
-////            startLocation.setLatitude(31.479536);
-////            startLocation.setLongitude(74.3697057);
-//            if (locationRequested) {
-//                Log.d(TAG, "onLocationResult: startLocation  ");
-//                Log.d(TAG, "onLocationResult: " + startLocation.getLatitude());
-//                Log.d(TAG, "onLocationResult: " + startLocation.getLongitude());
-//
-//                startLocation.setLatitude(locationResult.getLastLocation().getLatitude());
-//                startLocation.setLongitude(locationResult.getLastLocation().getLongitude());
-////                startLocation = locationResult.getLastLocation();
-//
-//                if (startLocation.getLatitude() != 0.0
-//                        || startLocation.getLongitude() != 0.0) {
-//                    Log.d(TAG, "onLocationResult: || startLocation.getLongitude() != 0.0) {");
-//                    locationRequested = false;
-//                }
-//
-//            }
-
             Location currentLocation = locationResult.getLastLocation();
 
             if (currentLocation == null)
@@ -488,8 +392,6 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d(TAG, "onLocationResult: currentLocation " + currentLocation.getLatitude());
             Log.d(TAG, "onLocationResult: currentLocation " + currentLocation.getLongitude());
-            //locationB.setLatitude(31.485486);
-            //            locationB.setLongitude(74.365666);
 
             double distance = (double) startLocation.distanceTo(currentLocation);
             Log.d(TAG, "onLocationResult: distance: " + distance);
@@ -523,8 +425,6 @@ public class MainActivity extends AppCompatActivity {
                     .child("cars")
                     .child(currentCarKey)
                     .child("booking")
-//                    .child("requests")
-//                    .child(mAuth.getCurrentUser().getUid())
                     .child("currentMileages")
                     .setValue(finalDistancec);
             databaseReference
@@ -541,24 +441,12 @@ public class MainActivity extends AppCompatActivity {
             databaseReference
                     .child("cars")
                     .child(currentCarKey)
-//                    .child("booking")
-//                    .child("requests")
-//                    .child(mAuth.getCurrentUser().getUid())
                     .child("tracking_history")
                     .push()
                     .setValue(hashMap);
 
-//            if (finalDistancec > totalMileagesDouble) {
-//                showLimitReachedDialog();/
-//
-//            }
-
-//            currentMileagesTextView.setText(df.format(distanceInMiles));
             Log.d(TAG, "onLocationResult: textview " + currentMileagesTextView.getText().toString());
             Log.d(TAG, "--------------------------------------------------------------\n\n\n");
-//            for (Location location : locationResult.getLocations()) {
-//                Log.d(TAG, "onLocationResult: " + location.toString());
-//            }
         }
     };
 
@@ -705,7 +593,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-//            if (context != null)
             if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             }
