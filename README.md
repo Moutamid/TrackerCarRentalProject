@@ -8,7 +8,7 @@
 ## Preview
 <img src="https://raw.githubusercontent.com/Moutamid/AdminCarRentalProject/master/carrentalmockup/image1.jpeg" width="1024"/>
 
-<img src="https://user-images.githubusercontent.com/12999622/36225792-b7044432-11c3-11e8-8e22-5bbdcafa2312.gif" width="250"/>
+<img src="https://raw.githubusercontent.com/Moutamid/AdminCarRentalProject/master/carrentalmockup/video-carrental.gif" width="250"/>
 
 <!-- ### Specifications ###
 
